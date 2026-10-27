@@ -1,0 +1,49 @@
+name: CONA httpx Live-Host Probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Intigtrity username (header X-Intigtrity-Username)'
+        required: true
+        default: 'sabry313'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install httpx
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y unzip curl
+          curl -L https://github.com/projectdiscovery/httpx/releases/download/v1.2.3/httpx_1.2.3_linux_amd64.zip -o httpx.zip
+          unzip -o httpx.zip -d /usr/local/bin/
+          chmod +x /usr/local/bin/httpx
+          httpx -version
+
+      - name: Set Intigtrity headers
+        run: |
+          echo "INTIGRITI_USERNAME=${{ github.event.inputs.username || 'sabry313' }}" >> $GITHUB_ENV
+          echo "PROGRAM_UA=YOUR_REQUIRED_STANDARD_USER_AGENT intigriti:${{ github.event.inputs.username || 'sabry313' }}" >> $GITHUB_ENV
+
+      - name: Run httpx live-host probe
+        run: |
+          chmod +x httpx_live_probe.sh
+          ./httpx_live_probe.sh
+
+      - name: Upload results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-brute-hosts-jsonl
+          path: |
+            live_brute_hosts.jsonl
+            httpx_run.log
+          retention-days: 30

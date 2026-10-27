@@ -1,0 +1,9 @@
+[workflow] Starting httpx live-host probe
+[workflow] Input file: /home/sali/BugBounty_Lab/COCO/222/all_s.txt
+[workflow] Output file: /home/sali/BugBounty_Lab/COCO/222/live_brute_hosts.jsonl
+[workflow] Domains to probe: 1924
+[workflow] INTIGRITI_USERNAME=sabry313
+[workflow] PROGRAM_UA=YOUR_REQUIRED_STANDARD_USER_AGENT intigriti:sabry313
+[workflow] Rate limit: 7 req/s (within 10 req/s program cap)
+[workflow] Threads: 1
+[workflow] Running httpx...
